@@ -16,7 +16,6 @@ class MyApp(ShowBase):
         # self.disableMouse()
  
         # Load the environment model.
-        # self.scene = self.loader.loadModel("models/environment")
         self.scene = self.loader.loadModel("land/1.egg")
         # Reparent the model to render.
         self.scene.reparentTo(self.render)
@@ -29,16 +28,6 @@ class MyApp(ShowBase):
         self.scene.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldPosition)
         self.scene.setTexture(tex)
 
-        ambientLight = AmbientLight('ambientLight')
-        ambientLight.setColor(Vec4(0.6, 0.6, 0.6, 1))
-        ambientLightNP = render.attachNewNode(ambientLight)
-        self.render.setLight(ambientLightNP)
-
-        plight = PointLight('plight')
-        plight.setColor(VBase4(0.6, 0.6, 0.6, 1))
-        plnp = render.attachNewNode(plight)
-        plnp.setPos(10, 20, 0)
-        self.render.setLight(plnp)
 
         # # Use a 512x512 resolution shadow map
         # plight.setShadowCaster(True, 512, 512)
@@ -46,15 +35,24 @@ class MyApp(ShowBase):
         # self.render.setShaderAuto()
  
         # Add the spinCameraTask procedure to the task manager.
-        self.taskMgr.add(self.spinCameraTask, "SpinCameraTask")
+        # self.taskMgr.add(self.spinCameraTask, "SpinCameraTask")
  
         # Load and transform the panda actor.
-        self.basicActor = Actor("person.egg")#,
-                                # {"walk": "models/panda-walk4"})
-        self.basicActor.setScale(0.005, 0.005, 0.005)
+        self.basicActor = Actor("person.egg",
+                                {"walk": "person-Anim1.egg"})
+        # Reparent the model to render.
         self.basicActor.reparentTo(self.render)
+        # Apply scale and position transforms on the model.
+        self.basicActor.setScale(1, 1, 1)
+        self.basicActor.setPos(-8, 42, 0)
+        self.basicActor.setColorScale(.95, .92, .99, 1.0)
+
+        tex = loader.loadTexture('land/16.jpg')
+        self.basicActor.setTexGen(TextureStage.getDefault(), TexGenAttrib.MWorldPosition)
+        self.basicActor.setTexture(tex)
+
         # Loop its animation.
-        # self.pandaActor.loop("walk")
+        self.basicActor.loop("walk")
  
         # # Create the four lerp intervals needed for the panda to
         # # walk back and forth.
@@ -78,6 +76,16 @@ class MyApp(ShowBase):
         #                           pandaHprInterval2,
         #                           name="pandaPace")
         # self.pandaPace.loop()
+        ambientLight = AmbientLight('ambientLight')
+        ambientLight.setColor(Vec4(0.6, 0.6, 0.6, 1))
+        ambientLightNP = render.attachNewNode(ambientLight)
+        self.render.setLight(ambientLightNP)
+
+        plight = PointLight('plight')
+        plight.setColor(VBase4(0.6, 0.6, 0.6, 1))
+        plnp = render.attachNewNode(plight)
+        plnp.setPos(10, 20, 0)
+        self.render.setLight(plnp)
  
     # Define a procedure to move the camera.
     def spinCameraTask(self, task):
